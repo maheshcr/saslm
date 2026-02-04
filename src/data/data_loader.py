@@ -70,8 +70,9 @@ class SASLMDataset(Dataset):
     def _tokenize_chunks(self, chunks: List[str]):
         """Tokenize chunks and create fixed-length sequences."""
         for chunk in chunks:
-            # Tokenize
-            tokens = self.tokenizer.encode(chunk)
+            # Tokenize - get the token IDs from the Encoding object
+            encoding = self.tokenizer.encode(chunk)
+            tokens = encoding.ids  # Extract the list of token IDs
 
             # Create sequences with sliding window
             for i in range(0, len(tokens) - self.seq_length, self.stride):
@@ -139,8 +140,9 @@ class StreamingSASLMDataset(IterableDataset):
             # Sample a chunk
             chunk, _ = self.sampler.sample_chunk()
 
-            # Tokenize
-            tokens = self.tokenizer.encode(chunk)
+            # Tokenize - get the token IDs from the Encoding object
+            encoding = self.tokenizer.encode(chunk)
+            tokens = encoding.ids
 
             # If too short, sample another
             if len(tokens) < self.seq_length + 1:
