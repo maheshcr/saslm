@@ -319,11 +319,28 @@ class ChunkCleaner:
         return chunks
 
     def _split_into_chunks(self, text: str) -> List[str]:
-        """Split text into overlapping chunks."""
+        """Split text into overlapping chunks.
+
+        Uses a hybrid approach:
+        1. First tries paragraph-based splitting (on \n\n)
+        2. Falls back to sentence-based splitting if paragraphs are too large
+        3. Uses character-based sliding window as final fallback
+
+        This ensures we always get proper chunks even with varying text formats.
+        """
         chunks = []
 
-        # Try to split at paragraph boundaries
+        # Normalize line endings first
+        text = text.replace('\r\n', '\n').replace('\r', '\n')
+
+        # Try paragraph-based splitting first
         paragraphs = text.split('\n\n')
+
+        # If we only got 1-2 paragraphs, the text likely uses single \n
+        # Try splitting on single newlines followed by capital letters (new sentences)
+        if len(paragraphs) <= 2 and len(text) > self.chunk_size * 2:
+            # Fall back to sentence-based or character-based chunking
+            return self._split_by_sliding_window(text)
 
         current_chunk = ""
         for para in paragraphs:
@@ -352,6 +369,56 @@ class ChunkCleaner:
         # Don't forget the last chunk
         if len(current_chunk) >= self.min_chunk_size:
             chunks.append(current_chunk.strip())
+
+        # If we still got too few chunks, use sliding window
+        if len(chunks) <= 2 and len(text) > self.chunk_size * 2:
+            return self._split_by_sliding_window(text)
+
+        return chunks
+
+    def _split_by_sliding_window(self, text: str) -> List[str]:
+        """Split text using sliding window with sentence boundary awareness.
+
+        This is the fallback method that always produces proper chunks.
+        """
+        chunks = []
+        stride = self.chunk_size - self.overlap
+
+        # Find sentence boundaries (., !, ?) followed by space and capital
+        sentence_ends = []
+        for i, char in enumerate(text[:-2]):
+            if char in '.!?' and text[i+1] == ' ' and text[i+2].isupper():
+                sentence_ends.append(i + 1)
+
+        pos = 0
+        while pos < len(text):
+            end_pos = pos + self.chunk_size
+
+            if end_pos >= len(text):
+                # Last chunk
+                chunk = text[pos:].strip()
+                if len(chunk) >= self.min_chunk_size:
+                    chunks.append(chunk)
+                break
+
+            # Try to end at a sentence boundary
+            best_end = end_pos
+            for sent_end in sentence_ends:
+                if pos + self.min_chunk_size < sent_end <= end_pos:
+                    best_end = sent_end
+
+            chunk = text[pos:best_end].strip()
+            if len(chunk) >= self.min_chunk_size:
+                chunks.append(chunk)
+
+            # Move position forward by stride
+            pos += stride
+
+            # Adjust to start at a sentence boundary if possible
+            for sent_end in sentence_ends:
+                if pos - 50 < sent_end <= pos + 50:
+                    pos = sent_end + 1
+                    break
 
         return chunks
 
