@@ -1,0 +1,97 @@
+# EXP-B1: Fine-tune DistilGPT-2, Prose Only
+# Fine-tune pretrained model on Sri Aurobindo's prose works
+
+name: EXP-B1-prose-only-finetune
+approach: finetune
+content: prose_only
+description: |
+  Fine-tune DistilGPT-2 (82M params) on Sri Aurobindo's prose works.
+  Leverages pretrained English knowledge, adapts to philosophical style.
+  Lower learning rate for stable fine-tuning.
+
+data:
+  corpus_path: ./data/clean_prose
+  include_types:
+    - essay
+    - letter
+    - commentary
+    - record
+  exclude_types:
+    - poetry
+    - drama
+  period_weights:
+    mature: 3.0
+    middle: 2.0
+    early: 0.5
+  content_weights:
+    essay: 2.0
+    letter: 1.5
+    commentary: 1.5
+  priority_works:
+    # Core philosophical works
+    - 21-22TheLifeDivine
+    - 23-24TheSynthesisOfYoga
+    # Letters (direct teaching)
+    - 28LettersOnYoga-I
+    - 29LettersOnYoga-II
+    - 30LettersOnYoga-III
+    - 31LettersOnYoga-IV
+    # Commentaries (Vedic/Upanishadic)
+    - 19EssaysOnTheGita
+    - 15TheSecretOfTheVeda
+    - 17IshaUpanishad
+    - 18KenaAndOtherUpanishads
+    # Essays and Records
+    - 12EssaysDivineAndHuman
+    - 10-11RecordOfYoga
+    # Social philosophy
+    - 25TheHumanCycle
+  train_split: 0.95
+  val_split: 0.05
+  seed: 42
+
+tokenizer:
+  vocab_size: 50257  # GPT-2 base vocab
+  tokenizer_path: ./tokenizers/tokenizer_extended
+  extend_base: true
+  base_tokenizer: distilgpt2
+  additional_tokens: 1000  # Sanskrit/philosophical terms
+
+model:
+  architecture: gpt2-finetune
+  base_model: distilgpt2
+  freeze_layers: 0  # Train all layers
+  block_size: 512
+
+training:
+  batch_size: 16
+  gradient_accumulation: 8
+  effective_batch_size: 128
+  learning_rate: 0.00005  # Lower for fine-tuning
+  weight_decay: 0.01  # Lower for fine-tuning
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 1.0
+  lr_scheduler: cosine
+  warmup_steps: 200
+  lr_decay_steps: 50000
+  max_steps: 50000  # May converge faster
+  eval_interval: 500
+  save_interval: 1000
+  sample_interval: 2000
+  finetune_lr: 0.00005
+
+grokking:
+  enabled: true
+  detection_window: 300
+  detection_threshold: 0.15
+  plateau_variance_threshold: 0.02
+  train_val_gap_threshold: 0.3
+
+hardware:
+  device: auto
+  precision: fp16
+  num_workers: 4
+  pin_memory: true
+  mount_drive: true
+  drive_path: /content/drive/MyDrive/saslm/experiments

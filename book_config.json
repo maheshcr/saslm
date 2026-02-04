@@ -1,0 +1,248 @@
+{
+  "01EarlyCulturalWritings.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "02CollectedPoems.pdf": {
+    "header_percent": 0.15,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "03-04CollectedPlaysAndStories.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "05Translations.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "06-07BandeMataram.pdf": {
+    "header_percent": 0.115,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "08Karmayogin.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "09WritingsInBengaliAndSanskrit.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "10-11RecordOfYoga.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "12EssaysDivineAndHuman.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "13EssaysInPhilosophyAndYoga.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "14VedicAndPhilologicalStudies.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "15TheSecretOfTheVeda.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "16HymnsToTheMysticFire.pdf": {
+    "header_percent": 0.103,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "17IshaUpanishad.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "18KenaAndOtherUpanishads.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "19EssaysOnTheGita.pdf": {
+    "header_percent": 0.092,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "20TheRenaissanceInIndia.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "21-22TheLifeDivine.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "23-24TheSynthesisofYoga.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "25TheHumanCycle.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "26TheFuturePoetry.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "27LettersOnPoetryAndArt.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "28LettersOnYoga-I.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "29LettersOnYoga-II.pdf": {
+    "header_percent": 0.103,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "30LettersOnYoga-III.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "31LettersOnYoga-IV.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "32TheMotherWithLettersOnTheMother.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "33-34Savitri.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "35LettersOnHimselfAndTheAshram.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "36AutobiographicalNotes.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "RoyglosF.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "CWoSV.pdf": {
+    "header_percent": 0.095,
+    "footer_percent": 0.118,
+    "exclude_pages": [
+      [
+        2,
+        63
+      ]
+    ],
+    "notes": "Analyzed 3 pages"
+  },
+  "01PrayersAndMeditations.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "03QuestionsAndAnswers1929-1931.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "04QuestionsAndAnswers1950-1951.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "05QuestionsAndAnswers1953.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "06QuestionsAndAnswers1954.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "07QuestionsAndAnswers1955.pdf": {
+    "header_percent": 0.103,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "08QuestionsAndAnswers1956.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "09QuestionsAndAnswers1957-1958.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "10OnThoughtsAndAphorisms.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "11NotesOnTheWay.pdf": {
+    "header_percent": 0.103,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "12OnEducation.pdf": {
+    "header_percent": 0.127,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "13WordsOfTheMother-I.pdf": {
+    "header_percent": 0.103,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "14WordsOfTheMother-II.pdf": {
+    "header_percent": 0.15,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "15WordsOfTheMother-III.pdf": {
+    "header_percent": 0.08,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "16SomeAnswersFromTheMother.pdf": {
+    "header_percent": 0.103,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  },
+  "17MoreAnswersFromTheMother.pdf": {
+    "header_percent": 0.15,
+    "footer_percent": 0.08,
+    "notes": "Analyzed 3 pages"
+  }
+}

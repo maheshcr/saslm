@@ -1,0 +1,85 @@
+# EXP-B2: Fine-tune DistilGPT-2, Prose + Poetry
+# Fine-tune pretrained model on prose AND poetry
+
+name: EXP-B2-prose-poetry-finetune
+approach: finetune
+content: prose_and_poetry
+description: |
+  Fine-tune DistilGPT-2 (82M params) on prose AND poetry.
+  Tests whether pretrained model can adapt to multiple styles.
+  Includes Savitri and Collected Poems.
+
+data:
+  corpus_path: ./data/clean_all
+  include_types:
+    - essay
+    - letter
+    - commentary
+    - poetry
+  exclude_types:
+    - drama
+  period_weights:
+    mature: 3.0
+    middle: 2.0
+    early: 0.5
+  content_weights:
+    essay: 2.0
+    letter: 1.5
+    commentary: 1.5
+    poetry: 1.0
+  priority_works:
+    - 21-22TheLifeDivine
+    - 33-34Savitri
+    - 02CollectedPoems
+    - 23-24TheSynthesisOfYoga
+    - 28-31LettersOnYoga
+    - 19EssaysOnTheGita
+  train_split: 0.95
+  val_split: 0.05
+  seed: 42
+
+tokenizer:
+  vocab_size: 50257
+  tokenizer_path: ./tokenizers/tokenizer_extended_poetry
+  extend_base: true
+  base_tokenizer: distilgpt2
+  additional_tokens: 1200  # More tokens for poetic vocabulary
+
+model:
+  architecture: gpt2-finetune
+  base_model: distilgpt2
+  freeze_layers: 0
+  block_size: 512
+
+training:
+  batch_size: 16
+  gradient_accumulation: 8
+  effective_batch_size: 128
+  learning_rate: 0.00005
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 1.0
+  lr_scheduler: cosine
+  warmup_steps: 200
+  lr_decay_steps: 50000
+  max_steps: 50000
+  eval_interval: 500
+  save_interval: 1000
+  sample_interval: 2000
+  finetune_lr: 0.00005
+
+grokking:
+  enabled: true
+  detection_window: 300
+  detection_threshold: 0.15
+  plateau_variance_threshold: 0.02
+  train_val_gap_threshold: 0.3
+
+hardware:
+  device: auto
+  precision: fp16
+  num_workers: 4
+  pin_memory: true
+  mount_drive: true
+  drive_path: /content/drive/MyDrive/saslm/experiments

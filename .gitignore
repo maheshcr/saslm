@@ -1,0 +1,96 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Large data files (keep in Drive/cloud)
+raw_data/
+*.pdf
+*.zip
+
+# Model checkpoints (keep in Drive)
+*.pth
+*.pt
+*.bin
+models/
+checkpoints/
+
+# Logs
+logs/
+*.log
+wandb/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
+credentials.json
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Old/backup files
+*_old.*
+*.bak
+*.backup
+
+# Keep these directories but not their large contents
+# processed_text/ - keep for reference but it's large
+# tokenizers/ - keep structure
+
+# Results (regeneratable)
+results/
+
+# Large text corpora (regeneratable from PDFs)
+processed_text/*.txt
+data/clean_prose/*.txt
+data/clean_all/*.txt
+
+# Keep stats and metadata files
+!data/clean_prose/corpus_stats.json
+!data/clean_all/corpus_stats.json
+!data/DATASET_EVOLUTION.md
+
+# Old tokenizer (keep new one)
+saslm_tokenizer.json
+saslm_tokenizer_old.json
+saslm_checkpoint.pth

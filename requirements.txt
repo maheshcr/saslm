@@ -1,0 +1,35 @@
+# SASLM Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core ML
+torch>=2.0.0
+transformers>=4.30.0
+tokenizers>=0.13.0
+datasets>=2.14.0
+
+# Numerical
+numpy>=1.24.0
+
+# Progress and utilities
+tqdm>=4.65.0
+pyyaml>=6.0
+
+# PDF Processing (for data extraction)
+pytesseract>=0.3.10
+pdf2image>=1.16.0
+pymupdf>=1.22.0
+pillow>=9.5.0
+
+# Experiment Tracking (optional but recommended)
+wandb>=0.15.0
+
+# Evaluation (LLM Judge)
+openai>=1.0.0
+anthropic>=0.18.0
+google-generativeai>=0.3.0
+
+# Visualization (optional)
+matplotlib>=3.7.0
+
+# Development
+pytest>=7.3.0

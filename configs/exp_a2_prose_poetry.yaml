@@ -1,0 +1,94 @@
+# EXP-A2: From Scratch, Prose + Poetry
+# Custom model trained on both prose and poetry
+
+name: EXP-A2-prose-poetry
+approach: from_scratch
+content: prose_and_poetry
+description: |
+  Train a ~25M parameter GPT model on prose AND poetry.
+  Includes Savitri and Collected Poems.
+  Tests whether model can handle multiple writing styles.
+
+data:
+  corpus_path: ./data/clean_all
+  include_types:
+    - essay
+    - letter
+    - commentary
+    - poetry
+  exclude_types:
+    - drama
+  period_weights:
+    mature: 3.0
+    middle: 2.0
+    early: 0.5
+  content_weights:
+    essay: 2.0
+    letter: 1.5
+    commentary: 1.5
+    poetry: 1.0  # Equal weight now
+  priority_works:
+    - 21-22TheLifeDivine
+    - 33-34Savitri
+    - 02CollectedPoems
+    - 23-24TheSynthesisOfYoga
+    - 28-31LettersOnYoga
+    - 19EssaysOnTheGita
+  train_split: 0.95
+  val_split: 0.05
+  seed: 42
+
+tokenizer:
+  vocab_size: 16384
+  min_frequency: 2
+  tokenizer_path: ./tokenizers/tokenizer_16k_poetry
+  special_tokens:
+    - '[UNK]'
+    - '[CLS]'
+    - '[SEP]'
+    - '[PAD]'
+    - '[MASK]'
+    - '<|endoftext|>'
+  extend_base: false
+
+model:
+  architecture: gpt2-custom
+  vocab_size: 16384
+  n_layers: 6
+  n_heads: 6
+  n_embd: 384
+  block_size: 512
+  dropout: 0.1
+  bias: false
+
+training:
+  batch_size: 32
+  gradient_accumulation: 4
+  effective_batch_size: 128
+  learning_rate: 0.0003
+  weight_decay: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  grad_clip: 1.0
+  lr_scheduler: cosine
+  warmup_steps: 500
+  lr_decay_steps: 100000
+  max_steps: 100000
+  eval_interval: 500
+  save_interval: 1000
+  sample_interval: 2000
+
+grokking:
+  enabled: true
+  detection_window: 500
+  detection_threshold: 0.15
+  plateau_variance_threshold: 0.02
+  train_val_gap_threshold: 0.5
+
+hardware:
+  device: auto
+  precision: fp16
+  num_workers: 4
+  pin_memory: true
+  mount_drive: true
+  drive_path: /content/drive/MyDrive/saslm/experiments
