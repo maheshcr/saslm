@@ -48,6 +48,23 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from src.utils.config import load_config, ExperimentConfig, get_device, print_config
 from src.training.checkpoint_manager import CheckpointManager
 from src.training.grokking_detector import GrokkingDetector
+
+
+def compute_loss(model, input_ids, labels):
+    """
+    Compute loss for both custom GPT and HuggingFace models.
+
+    Custom GPT: returns (logits, loss) with positional args
+    HuggingFace: returns CausalLMOutput with .loss attribute
+    """
+    # Check if it's a HuggingFace model
+    if hasattr(model, 'config') and hasattr(model.config, 'model_type'):
+        # HuggingFace model - use keyword arguments
+        outputs = model(input_ids=input_ids, labels=labels)
+        return outputs.logits, outputs.loss
+    else:
+        # Custom GPT model - use positional arguments
+        return model(input_ids, labels)
 from src.training.metrics_logger import MetricsLogger
 
 
@@ -473,7 +490,7 @@ def evaluate(model, val_loader, device, max_batches: int = None) -> Tuple[float,
         labels = batch['labels'].to(device)
 
         with autocast(enabled=device != 'cpu'):
-            _, loss = model(input_ids, labels)
+            _, loss = compute_loss(model, input_ids, labels)
 
         total_loss += loss.item() * input_ids.size(0)
         total_tokens += input_ids.size(0)
@@ -608,11 +625,11 @@ def train(config: ExperimentConfig, resume: bool = False):
             # Forward pass with mixed precision
             if scaler:
                 with autocast():
-                    _, loss = model(input_ids, labels)
+                    _, loss = compute_loss(model, input_ids, labels)
                     loss = loss / accumulation_steps
                 scaler.scale(loss).backward()
             else:
-                _, loss = model(input_ids, labels)
+                _, loss = compute_loss(model, input_ids, labels)
                 loss = loss / accumulation_steps
                 loss.backward()
 
