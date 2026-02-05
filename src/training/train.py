@@ -433,10 +433,10 @@ def create_model(config: ExperimentConfig, vocab_size: int, device: str) -> nn.M
 
     elif config.approach == 'finetune':
         print(f"\nLoading pretrained model: {config.model.base_model}...")
-        from transformers import GPT2LMHeadModel, GPT2Config
+        from transformers import AutoModelForCausalLM, AutoConfig
 
-        # Load pretrained
-        model = GPT2LMHeadModel.from_pretrained(config.model.base_model)
+        # Load pretrained model (works for GPT-2, Pythia, and other causal LMs)
+        model = AutoModelForCausalLM.from_pretrained(config.model.base_model)
 
         # Resize embeddings if vocab changed
         if model.config.vocab_size != vocab_size:
@@ -446,7 +446,18 @@ def create_model(config: ExperimentConfig, vocab_size: int, device: str) -> nn.M
         # Freeze layers if specified
         if config.model.freeze_layers > 0:
             print(f"  Freezing first {config.model.freeze_layers} layers")
-            for i, block in enumerate(model.transformer.h[:config.model.freeze_layers]):
+            # Handle different model architectures
+            if hasattr(model, 'transformer') and hasattr(model.transformer, 'h'):
+                # GPT-2 style
+                layers = model.transformer.h
+            elif hasattr(model, 'gpt_neox') and hasattr(model.gpt_neox, 'layers'):
+                # Pythia/GPT-NeoX style
+                layers = model.gpt_neox.layers
+            else:
+                layers = []
+                print("  Warning: Could not identify layer structure for freezing")
+
+            for i, block in enumerate(layers[:config.model.freeze_layers]):
                 for param in block.parameters():
                     param.requires_grad = False
 

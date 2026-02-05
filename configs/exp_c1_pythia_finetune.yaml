@@ -1,0 +1,91 @@
+# EXP-C1: Fine-tune Pythia-70M, Prose Only
+# Pythia models trained on The Pile - better tokenizer for diverse text
+# Comparing against our from-scratch model to understand adaptation vs learning
+
+name: EXP-C1-pythia-finetune
+approach: finetune
+content: prose_only
+description: |
+  Fine-tune Pythia-70M on Sri Aurobindo's prose works.
+  Pythia's tokenizer (GPT-NeoX) handles diverse text better than GPT-2.
+  70M params is comparable to our 17M from-scratch model.
+  This helps us understand: can a pretrained model adapt to specialized text?
+
+data:
+  corpus_path: ./data/clean_prose
+  include_types:
+    - essay
+    - letter
+    - commentary
+    - record
+  exclude_types:
+    - poetry
+    - drama
+  period_weights:
+    mature: 3.0
+    middle: 2.0
+    early: 0.5
+  content_weights:
+    essay: 2.0
+    letter: 1.5
+    commentary: 1.5
+  priority_works:
+    - 21-22TheLifeDivine
+    - 23-24TheSynthesisOfYoga
+    - 28LettersOnYoga-I
+    - 29LettersOnYoga-II
+    - 30LettersOnYoga-III
+    - 31LettersOnYoga-IV
+    - 19EssaysOnTheGita
+    - 15TheSecretOfTheVeda
+    - 17IshaUpanishad
+    - 18KenaAndOtherUpanishads
+    - 12EssaysDivineAndHuman
+    - 10-11RecordOfYoga
+  train_split: 0.95
+  val_split: 0.05
+  seed: 42
+
+tokenizer:
+  # Will use Pythia's tokenizer automatically in finetune mode
+  vocab_size: 50304  # Pythia vocab size
+  tokenizer_path: EleutherAI/pythia-70m
+  base_tokenizer: EleutherAI/pythia-70m
+
+model:
+  architecture: pythia-finetune
+  base_model: EleutherAI/pythia-70m  # 70M params, comparable to our 17M
+  freeze_layers: 0  # Train all layers
+  block_size: 512
+
+training:
+  batch_size: 16
+  gradient_accumulation: 8
+  effective_batch_size: 128
+  learning_rate: 0.0001  # Slightly higher than GPT-2 fine-tune
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 1.0
+  lr_scheduler: cosine
+  warmup_steps: 500
+  lr_decay_steps: 50000
+  max_steps: 50000
+  eval_interval: 500
+  save_interval: 1000
+  sample_interval: 2000
+
+grokking:
+  enabled: true
+  detection_window: 300
+  detection_threshold: 0.15
+  plateau_variance_threshold: 0.02
+  train_val_gap_threshold: 0.3
+
+hardware:
+  device: auto
+  precision: fp16
+  num_workers: 4
+  pin_memory: true
+  mount_drive: true
+  drive_path: /content/drive/MyDrive/saslm/experiments
