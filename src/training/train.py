@@ -344,26 +344,72 @@ def create_dataloaders(config: ExperimentConfig, tokenizer, device: str):
 
 
 def load_tokenizer(config: ExperimentConfig):
-    """Load tokenizer based on config."""
-    from tokenizers import Tokenizer
+    """Load tokenizer based on config.
 
-    tokenizer_path = Path(config.tokenizer.tokenizer_path)
+    For fine-tuning (approach='finetune'), uses HuggingFace tokenizer
+    to ensure compatibility with pretrained model vocabulary.
 
-    if tokenizer_path.is_dir():
-        tokenizer_file = tokenizer_path / "tokenizer.json"
+    For from-scratch training, uses custom tokenizer.
+    """
+    if config.approach == 'finetune':
+        # Use HuggingFace tokenizer for fine-tuning
+        from transformers import AutoTokenizer
+
+        base_model = config.model.base_model
+        print(f"Loading HuggingFace tokenizer for {base_model}...")
+
+        hf_tokenizer = AutoTokenizer.from_pretrained(base_model)
+
+        # Wrap in a compatibility class that has same interface as tokenizers.Tokenizer
+        class HFTokenizerWrapper:
+            def __init__(self, hf_tok):
+                self.hf_tokenizer = hf_tok
+                # Set pad token if not set
+                if self.hf_tokenizer.pad_token is None:
+                    self.hf_tokenizer.pad_token = self.hf_tokenizer.eos_token
+
+            def get_vocab_size(self):
+                return len(self.hf_tokenizer)
+
+            def encode(self, text):
+                # Return object with .ids attribute for compatibility
+                class Encoding:
+                    def __init__(self, ids):
+                        self.ids = ids
+                encoded = self.hf_tokenizer.encode(text, add_special_tokens=False)
+                return Encoding(encoded)
+
+            def decode(self, ids):
+                return self.hf_tokenizer.decode(ids)
+
+            def token_to_id(self, token):
+                return self.hf_tokenizer.convert_tokens_to_ids(token)
+
+        tokenizer = HFTokenizerWrapper(hf_tokenizer)
+        print(f"Loaded tokenizer: {tokenizer.get_vocab_size():,} tokens")
+        return tokenizer
+
     else:
-        tokenizer_file = tokenizer_path
+        # Use custom tokenizer for from-scratch training
+        from tokenizers import Tokenizer
 
-    if not tokenizer_file.exists():
-        raise FileNotFoundError(
-            f"Tokenizer not found at {tokenizer_file}. "
-            f"Run: python src/data/train_tokenizer.py --corpus {config.data.corpus_path}"
-        )
+        tokenizer_path = Path(config.tokenizer.tokenizer_path)
 
-    tokenizer = Tokenizer.from_file(str(tokenizer_file))
-    print(f"Loaded tokenizer: {tokenizer.get_vocab_size():,} tokens")
+        if tokenizer_path.is_dir():
+            tokenizer_file = tokenizer_path / "tokenizer.json"
+        else:
+            tokenizer_file = tokenizer_path
 
-    return tokenizer
+        if not tokenizer_file.exists():
+            raise FileNotFoundError(
+                f"Tokenizer not found at {tokenizer_file}. "
+                f"Run: python src/data/train_tokenizer.py --corpus {config.data.corpus_path}"
+            )
+
+        tokenizer = Tokenizer.from_file(str(tokenizer_file))
+        print(f"Loaded tokenizer: {tokenizer.get_vocab_size():,} tokens")
+
+        return tokenizer
 
 
 # =============================================================================
@@ -508,18 +554,33 @@ def generate_samples(model, tokenizer, prompts: list, device: str, max_tokens: i
     model.eval()
     samples = []
 
+    # Check if it's a HuggingFace model for proper generation settings
+    is_hf_model = hasattr(model, 'config') and hasattr(model.config, 'model_type')
+
     for prompt in prompts:
         # Encode prompt
         encoded = tokenizer.encode(prompt)
         input_ids = torch.tensor([encoded.ids], dtype=torch.long, device=device)
 
-        # Generate
-        output_ids = model.generate(
-            input_ids,
-            max_new_tokens=max_tokens,
-            temperature=0.8,
-            top_k=50,
-        )
+        # Generate with appropriate settings
+        if is_hf_model:
+            # HuggingFace model - set pad_token_id to avoid warnings
+            output_ids = model.generate(
+                input_ids,
+                max_new_tokens=max_tokens,
+                temperature=0.8,
+                top_k=50,
+                do_sample=True,
+                pad_token_id=model.config.eos_token_id,
+            )
+        else:
+            # Custom GPT model
+            output_ids = model.generate(
+                input_ids,
+                max_new_tokens=max_tokens,
+                temperature=0.8,
+                top_k=50,
+            )
 
         # Decode
         generated = tokenizer.decode(output_ids[0].tolist())
